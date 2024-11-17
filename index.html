@@ -45,7 +45,7 @@
   </div>
 
   <script>
-   const LANYARD_WS = 'wss://api.lanyard.rest/socket';
+ const LANYARD_WS = 'wss://api.lanyard.rest/socket';
 const LANYARD_OP = {
   PRESENCE: 0,
   HELLO: 1,
@@ -53,7 +53,7 @@ const LANYARD_OP = {
   HEARTBEAT: 3,
 };
 const EVENTS_TO_CALLBACK = ['INIT_STATE', 'PRESENCE_UPDATE'];
-const DISCORD_ID = '1202303158915960845';
+const DISCORD_ID = '719885754444283946';
 
 let spotifyBarTimer = null;
 
@@ -62,6 +62,7 @@ function initializeLanyard(callback) {
 
   ws.onmessage = ({ data }) => {
     const received = JSON.parse(data);
+    console.log('Received WebSocket Data:', received); // Log the received data for debugging
 
     switch (received.op) {
       case LANYARD_OP.HELLO: {
@@ -86,16 +87,17 @@ function initializeLanyard(callback) {
 }
 
 initializeLanyard((data) => {
+  console.log('Presence Data:', data); // Log the presence data to check the structure
   setupBasicInfo(data);
   setupSpotify(data);
 });
 
 function setupBasicInfo(data) {
   const { discord_user, discord_status, activities } = data;
-  
-  // Check if discord_user is present to avoid errors
+
+  // Check if discord_user exists, otherwise log a more detailed error
   if (!discord_user) {
-    console.error('Discord user data is not available.');
+    console.error('Discord user data is not available.', data); // Log the entire data to debug
     return;
   }
 
